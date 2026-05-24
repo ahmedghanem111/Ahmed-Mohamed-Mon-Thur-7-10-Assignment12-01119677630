@@ -1,0 +1,148 @@
+use assignment8
+
+db.createCollection("books", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["title"],
+      properties: {
+        title: {
+          bsonType: "string",
+          minLength: 1
+        }
+      }
+    }
+  }
+})
+
+db.authors.insertOne({
+  name: "Ahmed"
+})
+
+db.createCollection("logs", {
+  capped: true,
+  size: 1024 * 1024
+})
+
+db.books.createIndex({ title: 1 })
+
+db.books.insertOne({
+  title: "Future",
+  author: "John",
+  year: 2020,
+  genres: ["Science Fiction"]
+})
+
+db.books.insertMany([
+{
+title: "Brave New World",
+author: "Aldous Huxley",
+year: 1932,
+genres: ["Science Fiction"]
+},
+{
+title: "Harry Potter",
+author: "J.K Rowling",
+year: 2005,
+genres: ["Fantasy"]
+},
+{
+title: "Dracula",
+author: "Bram Stoker",
+year: 1998,
+genres: ["Horror"]
+}
+])
+
+db.logs.insertOne({
+  message: "Future"
+})
+
+db.books.updateOne(
+  { title: "Future" },
+  { $set: { year: 2022 } }
+)
+
+db.books.findOne({
+  title: "Brave New World"
+})
+
+db.books.find({
+  year: {
+    $gte: 1990,
+    $lte: 2010
+  }
+})
+
+db.books.find({
+  genres: "Science Fiction"
+})
+
+db.books.find()
+.sort({ year: -1 })
+.skip(2)
+.limit(3)
+
+db.books.find({
+  year: {
+    $type: "int"
+  }
+})
+
+db.books.find({
+  genres: {
+    $nin: ["Horror", "Science Fiction"]
+  }
+})
+
+db.books.deleteMany({
+  year: {
+    $lt: 2000
+  }
+})
+
+db.books.aggregate([
+{
+$match: {
+year: { $gt: 2000 }
+}
+},
+{
+$sort: {
+year: -1
+}
+}
+])
+
+db.books.aggregate([
+{
+$match: {
+year: { $gt: 2000 }
+}
+},
+{
+$project: {
+_id: 0,
+title: 1,
+author: 1,
+year: 1
+}
+}
+])
+
+db.books.aggregate([
+{
+$unwind: "$genres"
+}
+])
+
+db.books.aggregate([
+{
+$lookup: {
+from: "logs",
+localField: "title",
+foreignField: "message",
+as: "logsData"
+}
+}
+])
