@@ -1,0 +1,1 @@
+export const revokeTokenKey = (userId, jti) => `Users:login:${userId}:${jti}`
