@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login Test</title>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+<h2>Google Login Test</h2>
+
+<div id="g_id_onload"
+     data-client_id="449357009205-jf3vas9bsk3s5r4dvisgte4k6h4sk6rg.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard">
+</div>
+
+<script>
+
+async function handleCredentialResponse(response){
+
+    console.log(response);
+
+    const res = await fetch("http://localhost:3000/auth/social-login",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            idToken: response.credential
+
+        })
+
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+
+}
+
+</script>
+
+</body>
+</html>

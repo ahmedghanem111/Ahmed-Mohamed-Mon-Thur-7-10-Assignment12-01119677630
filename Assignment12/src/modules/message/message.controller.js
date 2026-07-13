@@ -2,7 +2,6 @@ import Message from "./message.model.js";
 import { encrypt, decrypt } from "../../utils/encryption.js";
 
 
-
 export const sendMessage = async (req, res) => {
   try {
 
@@ -30,8 +29,6 @@ export const sendMessage = async (req, res) => {
 
   }
 };
-
- 
 
 
 export const getMessages = async (req, res) => {
@@ -61,8 +58,6 @@ export const getMessages = async (req, res) => {
 
   }
 };
-
-
 
 
 export const deleteMessage = async (req, res) => {
